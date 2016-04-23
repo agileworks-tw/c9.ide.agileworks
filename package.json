@@ -1,0 +1,23 @@
+{
+  "name": "c9.ide.agileworks",
+  "description": "AgileWorks Plugin for Cloud9",
+  "version": "0.0.1",
+  "author": "Trunk Studio",
+  "contributors": [
+    {
+      "name": "Kyle Lin",
+      "email": "kyle@trunk-studio.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "plugins": {
+    "agileworks": {}
+  },
+  "categories": ["miscellaneous"],
+  "licenses": [
+    "MIT"
+  ]
+}
