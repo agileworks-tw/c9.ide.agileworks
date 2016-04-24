@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    main.consumes = ["Plugin", "Panel", "ui", "Form", "Editor", "tabManager"];
+    main.consumes = ["Plugin", "Panel", "ui", "Form", "Editor", "tabManager", "fs"];
     main.provides = ["agileworks"];
     return main;
 
@@ -10,6 +10,7 @@ define(function(require, exports, module) {
         var Editor = imports.Editor;
         var tabManager = imports.tabManager;
         var ui = imports.ui;
+        var fs = imports.fs;
 
         var markup = require("text!./plugin.xml");
         
@@ -18,7 +19,7 @@ define(function(require, exports, module) {
         var plugin = new Panel("Ajax.org", main.consumes, {
             index: 100,
             width: 250,
-            caption: "AgileWorks",
+            caption: "Tutorial",
             minWidth: 130,
             where: "left"
         });
@@ -36,34 +37,50 @@ define(function(require, exports, module) {
         /***** Lifecycle *****/
         
         plugin.on("draw", function(e){
-            // Insert css
-            ui.insertCss(require("text!./panel.css"), options.staticPrefix, plugin);
-        
-            // Set some custom HTML
-            e.html.innerHTML = require("text!./panel.html");
-            
-            var btnOpenBook = document.getElementById("btnOpenBook");
-            
-            btnOpenBook.onclick = function() {
-                  var newTab = tabManager.open({
-                      value      : "https://trunkstudio.gitbooks.io/react-native/content/",
-                      editorType : "urlview",
-                      active     : true,
-                  }, function(err, tab) {});
-                  
-                  newTab.title = "Tutorial";
-                  
-            };
-        });
-        
 
-        plugin.on("load", function() {
-            load();
+            //require("text!./panel.css")
+            
+            fs.readFile('/.agileworks/index.css', function(err, data) {
+                ui.insertCss(data, options.staticPrefix, plugin);
+            });
+        
+            fs.readFile('/.agileworks/index.html', function(err, data) {
+                if (err) throw err;
+
+                e.html.innerHTML = data;
+                
+                var links = e.html.querySelectorAll('a');
+    
+                for (var i = 0; i < links.length; i++) {
+                    var link = links[i];
+                    link.onclick = function() {
+                        var newTab = tabManager.open({
+                            active      : true,
+                            editorType  : "urlview",
+                            value       : this.getAttribute('href'),
+                            document    : {
+                                title : this.getAttribute('title'),
+                                urlview : {
+                                    backgroundColor : "#FFFFFF",
+                                    dark : false
+                                }
+                            }
+                        });
+                        return false;
+                    };
+                }
+            });
+
+
         });
         
-        plugin.on("unload", function() {
+        // plugin.on("load", function() {
+        //     load();
+        // });
         
-        });
+        // plugin.on("unload", function() {
+        
+        // });
         
         /***** Register and define API *****/
         
