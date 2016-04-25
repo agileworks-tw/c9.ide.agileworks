@@ -12,8 +12,6 @@ define(function(require, exports, module) {
         var ui = imports.ui;
         var fs = imports.fs;
 
-        var markup = require("text!./plugin.xml");
-        
         /***** Initialization *****/
         
         var plugin = new Panel("Ajax.org", main.consumes, {
@@ -54,18 +52,33 @@ define(function(require, exports, module) {
                 for (var i = 0; i < links.length; i++) {
                     var link = links[i];
                     link.onclick = function() {
-                        var newTab = tabManager.open({
-                            active      : true,
-                            editorType  : "urlview",
-                            value       : this.getAttribute('href'),
-                            document    : {
-                                title : this.getAttribute('title'),
-                                urlview : {
-                                    backgroundColor : "#FFFFFF",
-                                    dark : false
+                        var linkHref = this.getAttribute('href');
+                        var linkTitle = this.getAttribute('title');
+                        
+                        if (linkHref.substr(-9) == "README.md") {
+                            var newTab = tabManager.open({
+                                active : true,
+                                editorType : "preview",
+                                path : linkHref,
+                                document : {
+                                    title : linkTitle
                                 }
-                            }
-                        });
+                            });
+                        }
+                        else {
+                            var newTab = tabManager.open({
+                                active : true,
+                                editorType : "urlview",
+                                value : linkHref,
+                                document : {
+                                    title : linkTitle,
+                                    urlview : {
+                                        backgroundColor : "#FFFFFF",
+                                        dark : false
+                                    }
+                                }
+                            });
+                        }
                         return false;
                     };
                 }

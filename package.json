@@ -1,7 +1,7 @@
 {
   "name": "c9.ide.agileworks",
   "description": "AgileWorks Plugin for Cloud9",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Trunk Studio",
   "contributors": [
     {
